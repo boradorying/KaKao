@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.example.kakaosearch.R
 import com.example.kakaosearch.data.ItemType
-import com.example.kakaosearch.data.KaKaoImage
 import com.example.kakaosearch.data.KakaoItem
 import com.example.kakaosearch.databinding.SearchItemBinding
 import com.example.kakaosearch.extension.loadHeartImage
+
+import com.example.kakaosearch.viewModel.BookmarkViewModel
 import java.util.Locale
 
-class SearchAdapter(private val itemList: MutableList<KakaoItem>) :
-    RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter(private val itemList: MutableList<KakaoItem>,private val bookmarkViewModel : BookmarkViewModel) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.ViewHolder {
 
@@ -31,13 +31,7 @@ class SearchAdapter(private val itemList: MutableList<KakaoItem>) :
         return itemList.size
     }
 
-    fun searchData(newData: List<KakaoItem>) {
-        if (newData.isNotEmpty()) {
-            itemList.clear()
-            itemList.addAll(newData)
-            notifyDataSetChanged()
-        }
-    }
+
 
     inner class ViewHolder(private val binding: SearchItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -66,11 +60,14 @@ class SearchAdapter(private val itemList: MutableList<KakaoItem>) :
                 binding.apply {
                     bookmarkBtn.loadHeartImage(item.isHeart)
                     bookmarkBtn.setOnClickListener {
+
                         item.isHeart = !item.isHeart
                         if (item.isHeart){
                             bookmarkBtn.setImageResource(R.drawable.baseline_favorite_24)
+                            bookmarkViewModel.addBookmark(item)
                         }else{
                             bookmarkBtn.setImageResource(R.drawable.baseline_favorite_border_24)
+                            bookmarkViewModel.removeBookmark(item)
                         }
                     }
                 }

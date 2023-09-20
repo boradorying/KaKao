@@ -6,6 +6,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.fragment.app.activityViewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
 
@@ -16,7 +17,10 @@ import com.example.kakaosearch.data.KaKaoImage
 import com.example.kakaosearch.data.KakaoItem
 import com.example.kakaosearch.databinding.FragmentSearchBinding
 import com.example.kakaosearch.retrofit.RetrofitInstance
+import com.example.kakaosearch.viewModel.BookmarkViewModel
+import com.example.kakaosearch.viewModel.SearchViewModel
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -24,6 +28,9 @@ import kotlinx.coroutines.withContext
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
     private val items: MutableList<KakaoItem> by lazy { mutableListOf() }
+    private val bookmarkViewModel: BookmarkViewModel by activityViewModels()
+    private val searchViewModel : SearchViewModel by activityViewModels()
+    private val job : Job? = null
     private val adapter: SearchAdapter get() = binding.searchRV.adapter as SearchAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -39,44 +46,32 @@ class SearchFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
         searchButton()
+        bookmarkViewModel.bookmarkedItems.observe(viewLifecycleOwner) {
+            // bookmarkedItems를 사용하여 북마크 상태를 업데이트
+            for (item in items) {
+                item.isHeart = it.contains(item) //토글이 아니라 화면에 표시되는 아이템의 북마크상태가 bookmarkeditems와 일치하도록 만드는 것
+            }
+            adapter.notifyDataSetChanged()
+        }
+        searchViewModel.searchResults.observe(viewLifecycleOwner){
+            items.clear()
+            items.addAll(it)
+            adapter.notifyDataSetChanged()
+        }
+
+
+    }
+    override fun onDestroyView() {
+        super.onDestroyView()
+        job?.cancel()
+
     }
 
     private fun searchButton() {
         binding.searchBtn.setOnClickListener {
             val query = binding.searchEdit.text.toString()
             if (query.isNotEmpty()) {
-                searchInfo(query)
-            }
-        }
-    }
-
-    private fun searchInfo(query: String) {
-        lifecycleScope.launch(Dispatchers.IO) {
-            val imageResponse = RetrofitInstance.getApiService()
-                .searchImage(Constants.AUTH_KEY, query, "accuracy", 1, 80)
-            val videoResponse = RetrofitInstance.getApiService()
-                .searchVideo(Constants.AUTH_KEY, query, "accuracy", 1, 15)
-
-            if (imageResponse.isSuccessful && videoResponse.isSuccessful) {
-                val imageDocuments = imageResponse.body()?.documents
-                val videoDocuments = videoResponse.body()?.documents
-
-                if (imageDocuments != null && videoDocuments != null) {
-                    val combinedList = mutableListOf<KakaoItem>()
-
-                    // 이미지와 동영상을 KaKaoItem으로 통합하여 리스트에 추가
-                    imageDocuments.forEach {
-                        combinedList.add(KakaoItem(it.thumbnailUrl, it.displaySitename, it.datetime, ItemType.IMAGE,false))
-                    }
-                    videoDocuments.forEach {
-                        combinedList.add(KakaoItem(it.thumbnailUrl, it.title, it.datetime, ItemType.VIDEO,false))
-                    }
-                    combinedList.sortByDescending { it.datetime }//시간역순정렬
-
-                    withContext(Dispatchers.Main) {
-                        adapter.searchData(combinedList)
-                    }
-                }
+                searchViewModel.searchInfo(query)
             }
         }
     }
@@ -84,8 +79,9 @@ class SearchFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.apply {
-            searchRV.adapter = SearchAdapter(items)
+            searchRV.adapter = SearchAdapter(items, bookmarkViewModel)
             searchRV.layoutManager = GridLayoutManager(context, 2)
         }
+
     }
 }

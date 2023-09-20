@@ -9,7 +9,7 @@ data class KakaoItem(
     val datetime: String,
 
     val itemType: ItemType ,// 이미지와 동영상을 구분하는 필드
-    var isHeart : Boolean = false
+    var isHeart : Boolean 
 )
 
 enum class ItemType {

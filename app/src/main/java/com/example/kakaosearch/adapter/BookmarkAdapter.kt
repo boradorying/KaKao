@@ -1,6 +1,7 @@
 package com.example.kakaosearch.adapter
 
 import android.icu.text.SimpleDateFormat
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -9,12 +10,14 @@ import com.example.kakaosearch.R
 import com.example.kakaosearch.data.ItemType
 import com.example.kakaosearch.data.KakaoItem
 import com.example.kakaosearch.databinding.BookmarkItemBinding
-import com.example.kakaosearch.databinding.SearchItemBinding
 import com.example.kakaosearch.extension.loadHeartImage
+
+import com.example.kakaosearch.viewModel.BookmarkViewModel
 import java.util.Locale
 
-class BookmarkAdapter():RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
-   private val bookmarkList = mutableListOf<KakaoItem>()
+class BookmarkAdapter(private val bookmarkViewModel : BookmarkViewModel):RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
+   var bookmarkList = mutableListOf<KakaoItem>()
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkAdapter.ViewHolder {
 
         val binding = BookmarkItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
@@ -23,6 +26,7 @@ class BookmarkAdapter():RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
 
     override fun onBindViewHolder(holder: BookmarkAdapter.ViewHolder, position: Int) {
         val item = bookmarkList[position]
+        Log.d("jun","어댑터${bookmarkList}")
         holder.bindItems(item)
     }
 
@@ -60,8 +64,12 @@ class BookmarkAdapter():RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
                         item.isHeart = !item.isHeart
                         if (item.isHeart){
                             bookmarkBtn.setImageResource(R.drawable.baseline_favorite_24)
+                            bookmarkViewModel.addBookmark(item)
+                            Log.d("jun","조아여${bookmarkList}")
                         }else{
                             bookmarkBtn.setImageResource(R.drawable.baseline_favorite_border_24)
+                            bookmarkViewModel.removeBookmark(item)
+                            Log.d("jun","안조아여${bookmarkList}")
                         }
                     }
                 }

@@ -12,8 +12,9 @@ class BookmarkViewModel : ViewModel(){
     fun addBookmark(item: KakaoItem){
         val items = _bookmarkedItems.value?: mutableListOf()
         if (!items.contains(item)){
-            items.add(item)
+            items.add(0,item)//맨앞에 추가임
             _bookmarkedItems.postValue(items)
+
         }
     }
 

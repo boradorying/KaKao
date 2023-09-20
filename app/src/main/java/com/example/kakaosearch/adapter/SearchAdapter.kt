@@ -1,5 +1,6 @@
 package com.example.kakaosearch.adapter
 
+import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -36,6 +37,7 @@ class SearchAdapter(private val itemList: MutableList<KakaoItem>,private val boo
     inner class ViewHolder(private val binding: SearchItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
+        @SuppressLint("SetTextI18n")
         fun bindItems(item: KakaoItem) {
             binding.apply {
 

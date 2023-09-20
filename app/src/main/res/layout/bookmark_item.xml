@@ -17,13 +17,13 @@
 
     <TextView
         android:id="@+id/nameArea"
-
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
         android:maxLines="3"
         android:ellipsize="end"
         android:text="출처"
+        android:textColor="@color/white"
         android:textSize="18sp"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="@+id/imageArea"
@@ -44,10 +44,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="10dp"
-
+        android:textColor="@color/white"
         android:text="시간시간시간시간시간"
         android:textSize="15dp"
-        android:padding="5dp"
         app:layout_constraintStart_toStartOf="@+id/imageArea"
         app:layout_constraintTop_toBottomOf="@+id/nameArea" />
 
@@ -55,8 +54,9 @@
         android:layout_width="wrap_content"
         android:layout_height="1dp"
         android:background="#E1C1C0C0"
-
-        app:layout_constraintBottom_toBottomOf="parent" />
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent" />
 
 
 

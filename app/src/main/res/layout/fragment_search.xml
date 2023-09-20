@@ -37,11 +37,12 @@
                         android:id="@+id/searchEdit"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-
-                        android:background="#D3C8C8"
+                        android:hint="검색어를 입력하세요."
+                        android:background="#FEFEFE"
                         android:paddingStart="45dp"
                         android:textColor="@color/black"
                         android:textSize="20sp"
+
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"

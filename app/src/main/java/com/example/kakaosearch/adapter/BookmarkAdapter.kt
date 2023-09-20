@@ -1,4 +1,71 @@
 package com.example.kakaosearch.adapter
 
-class BookmarkAdapter {
+import android.icu.text.SimpleDateFormat
+import android.view.LayoutInflater
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.bumptech.glide.Glide
+import com.example.kakaosearch.R
+import com.example.kakaosearch.data.ItemType
+import com.example.kakaosearch.data.KakaoItem
+import com.example.kakaosearch.databinding.BookmarkItemBinding
+import com.example.kakaosearch.databinding.SearchItemBinding
+import com.example.kakaosearch.extension.loadHeartImage
+import java.util.Locale
+
+class BookmarkAdapter():RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {
+   private val bookmarkList = mutableListOf<KakaoItem>()
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): BookmarkAdapter.ViewHolder {
+
+        val binding = BookmarkItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        return ViewHolder(binding)
+    }
+
+    override fun onBindViewHolder(holder: BookmarkAdapter.ViewHolder, position: Int) {
+        val item = bookmarkList[position]
+        holder.bindItems(item)
+    }
+
+    override fun getItemCount(): Int {
+
+        return bookmarkList.size
+    }
+    inner class ViewHolder(private val binding: BookmarkItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bindItems(item: KakaoItem) {
+            binding.apply {
+
+                when (item.itemType) {
+                    ItemType.IMAGE -> {
+                        nameArea.text = "[Image] ${item.title}"
+                    }
+
+                    ItemType.VIDEO -> {
+                        nameArea.text = "[Video] ${item.title}"
+                    }
+                }
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())//원래형식 ISO8601 파싱
+                val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) //파싱된날짜 원하는 걸로
+
+                val date = inputFormat.parse(item.datetime)
+                dateArea.text = outputFormat.format(date)
+
+                Glide.with(itemView.context)
+                    .load(item.thumbnailUrl)
+                    .into(imageArea)
+                binding.apply {
+                    bookmarkBtn.loadHeartImage(item.isHeart)
+                    bookmarkBtn.setOnClickListener {
+                        item.isHeart = !item.isHeart
+                        if (item.isHeart){
+                            bookmarkBtn.setImageResource(R.drawable.baseline_favorite_24)
+                        }else{
+                            bookmarkBtn.setImageResource(R.drawable.baseline_favorite_border_24)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

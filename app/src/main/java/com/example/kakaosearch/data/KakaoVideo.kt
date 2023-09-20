@@ -19,11 +19,11 @@ data class VideoMeata (
 )
 data class KakaoVideo (  //JSON으로 직렬화(객체를 JSON 문자열로 변환)
 
-    @SerializedName("thumbnail_url")
+    @SerializedName("thumbnail")
     val thumbnailUrl: String,
-    @SerializedName("display_sitename")
-    val displaySitename: String,
-    @SerializedName("dateTime")
-    val dateTime: String,//타임toconvert 해서 원하는 타임포맷으로 뿌려지는거
+    @SerializedName("title")
+    val title: String,
+    @SerializedName("datetime")
+    val datetime: String,//타임toconvert 해서 원하는 타임포맷으로 뿌려지는거
     var isHeart :Boolean =false
 )

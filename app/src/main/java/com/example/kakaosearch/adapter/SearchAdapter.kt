@@ -6,14 +6,20 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 
 import com.bumptech.glide.Glide
+import com.example.kakaosearch.R
+import com.example.kakaosearch.data.ItemType
 import com.example.kakaosearch.data.KaKaoImage
+import com.example.kakaosearch.data.KakaoItem
 import com.example.kakaosearch.databinding.SearchItemBinding
+import com.example.kakaosearch.extension.loadHeartImage
+import java.util.Locale
 
-class SearchAdapter (private val itemList: MutableList<KaKaoImage>):RecyclerView.Adapter<SearchAdapter.ViewHolder>(){
+class SearchAdapter(private val itemList: MutableList<KakaoItem>) :
+    RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.ViewHolder {
 
-       val binding = SearchItemBinding.inflate(LayoutInflater.from(parent.context),parent,false)
+        val binding = SearchItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ViewHolder(binding)
     }
 
@@ -25,23 +31,50 @@ class SearchAdapter (private val itemList: MutableList<KaKaoImage>):RecyclerView
         return itemList.size
     }
 
-    fun searchData(newData: MutableList<KaKaoImage>) { //검색할때 다시 새로운 리스트
+    fun searchData(newData: List<KakaoItem>) {
         if (newData.isNotEmpty()) {
             itemList.clear()
             itemList.addAll(newData)
             notifyDataSetChanged()
         }
     }
-   inner class ViewHolder(private val binding: SearchItemBinding):RecyclerView.ViewHolder(binding.root){
 
-       fun bindItems(item:KaKaoImage){
-           binding.apply {
-               nameArea.text = item.displaySitename
-                dateArea.text =item.datetime
-               Glide.with(itemView.context)
-                   .load(item.thumbnailUrl)
-                   .into(imageArea)
-           }
-       }
-   }
+    inner class ViewHolder(private val binding: SearchItemBinding) :
+        RecyclerView.ViewHolder(binding.root) {
+
+        fun bindItems(item: KakaoItem) {
+            binding.apply {
+
+                when (item.itemType) {
+                    ItemType.IMAGE -> {
+                        nameArea.text = "[Image] ${item.title}"
+                    }
+
+                    ItemType.VIDEO -> {
+                        nameArea.text = "[Video] ${item.title}"
+                    }
+                }
+                val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())//원래형식 ISO8601 파싱
+                val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) //파싱된날짜 원하는 걸로
+
+                val date = inputFormat.parse(item.datetime)
+                dateArea.text = outputFormat.format(date)
+
+                Glide.with(itemView.context)
+                    .load(item.thumbnailUrl)
+                    .into(imageArea)
+                binding.apply {
+                    bookmarkBtn.loadHeartImage(item.isHeart)
+                    bookmarkBtn.setOnClickListener {
+                        item.isHeart = !item.isHeart
+                        if (item.isHeart){
+                            bookmarkBtn.setImageResource(R.drawable.baseline_favorite_24)
+                        }else{
+                            bookmarkBtn.setImageResource(R.drawable.baseline_favorite_border_24)
+                        }
+                    }
+                }
+            }
+        }
+    }
 }

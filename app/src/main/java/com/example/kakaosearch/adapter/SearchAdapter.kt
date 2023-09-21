@@ -4,19 +4,19 @@ import android.annotation.SuppressLint
 import android.icu.text.SimpleDateFormat
 import android.view.LayoutInflater
 import android.view.ViewGroup
+import androidx.recyclerview.widget.DiffUtil
+import androidx.recyclerview.widget.ListAdapter
 import androidx.recyclerview.widget.RecyclerView
-
 import com.bumptech.glide.Glide
 import com.example.kakaosearch.R
 import com.example.kakaosearch.data.ItemType
 import com.example.kakaosearch.data.KakaoItem
 import com.example.kakaosearch.databinding.SearchItemBinding
 import com.example.kakaosearch.extension.loadHeartImage
-
 import com.example.kakaosearch.viewModel.BookmarkViewModel
 import java.util.Locale
 
-class SearchAdapter(private val itemList: MutableList<KakaoItem>,private val bookmarkViewModel : BookmarkViewModel) : RecyclerView.Adapter<SearchAdapter.ViewHolder>() {
+class SearchAdapter( private val bookmarkViewModel : BookmarkViewModel) : ListAdapter<KakaoItem, SearchAdapter.ViewHolder>(KakaoItemDiffCallback()) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): SearchAdapter.ViewHolder {
 
@@ -24,15 +24,21 @@ class SearchAdapter(private val itemList: MutableList<KakaoItem>,private val boo
         return ViewHolder(binding)
     }
 
+
     override fun onBindViewHolder(holder: SearchAdapter.ViewHolder, position: Int) {
-        holder.bindItems(itemList[position])
+      val item = getItem(position) //그포지션에 있는 아이템을 가지고 온당
+       holder.bindItems(item)
     }
 
-    override fun getItemCount(): Int {
-        return itemList.size
+    class KakaoItemDiffCallback : DiffUtil.ItemCallback<KakaoItem>() {
+        override fun areItemsTheSame(oldItem: KakaoItem, newItem: KakaoItem): Boolean {
+            return oldItem == newItem
+        }
+
+        override fun areContentsTheSame(oldItem: KakaoItem, newItem: KakaoItem): Boolean {
+            return oldItem == newItem
+        }
     }
-
-
 
     inner class ViewHolder(private val binding: SearchItemBinding) :
         RecyclerView.ViewHolder(binding.root) {
@@ -59,6 +65,7 @@ class SearchAdapter(private val itemList: MutableList<KakaoItem>,private val boo
                 Glide.with(itemView.context)
                     .load(item.thumbnailUrl)
                     .into(imageArea)
+
                 binding.apply {
                     bookmarkBtn.loadHeartImage(item.isHeart)
                     bookmarkBtn.setOnClickListener {

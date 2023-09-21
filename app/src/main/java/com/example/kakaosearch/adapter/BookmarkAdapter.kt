@@ -65,7 +65,7 @@ class BookmarkAdapter(private val bookmarkViewModel : BookmarkViewModel):Recycle
                         if (item.isHeart){
                             bookmarkBtn.setImageResource(R.drawable.baseline_favorite_24)
                             bookmarkViewModel.addBookmark(item)
-                            Log.d("jun","조아여${bookmarkList}")
+
                         }else{
                             bookmarkBtn.setImageResource(R.drawable.baseline_favorite_border_24)
                             bookmarkViewModel.removeBookmark(item)

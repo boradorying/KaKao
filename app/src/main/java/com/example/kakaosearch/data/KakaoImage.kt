@@ -25,6 +25,6 @@ data class KaKaoImage (  //JSON으로 직렬화(객체를 JSON 문자열로 변�
     val displaySitename: String,
     @SerializedName("datetime")
     val datetime: String,//타임toconvert 해서 원하는 타임포맷으로 뿌려지는거
-    var isHeart :Boolean =false
+    var isHeart :Boolean
 )
 

@@ -59,7 +59,7 @@ class SearchAdapter( private val bookmarkViewModel : BookmarkViewModel) : ListAd
                 val inputFormat = SimpleDateFormat("yyyy-MM-dd'T'HH:mm:ss.SSSXXX", Locale.getDefault())//원래형식 ISO8601 파싱
                 val outputFormat = SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault()) //파싱된날짜 원하는 걸로
 
-                val date = inputFormat.parse(item.datetime)
+                val date = inputFormat.parse(item.datetime) //인풋포맷 변수를 파싱한다( item.date)을파싱해서 데이트 변수에 넣는다
                 dateArea.text = outputFormat.format(date)
 
                 Glide.with(itemView.context)
@@ -80,7 +80,7 @@ class SearchAdapter( private val bookmarkViewModel : BookmarkViewModel) : ListAd
                         }
                     }
                 }
-            }
+            }//헬퍼클래스를 만들고 세이브랑 로드를 만든다
         }
     }
 }

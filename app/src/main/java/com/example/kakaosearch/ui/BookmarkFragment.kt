@@ -15,11 +15,13 @@ import com.example.kakaosearch.viewModel.BookmarkViewModel
 
 class BookmarkFragment : Fragment() {
     private lateinit var binding: FragmentBookmarkBinding
-    private val adapter get() = binding.bookRv.adapter as BookmarkAdapter
+//    private val adapter get() = binding.bookRv.adapter as BookmarkAdapter
+    private val adapter : BookmarkAdapter by lazy { binding.bookRv.adapter as BookmarkAdapter }
     private val bookmarkViewModel: BookmarkViewModel by activityViewModels()
     override fun onCreate(savedInstanceState: Bundle?) {
-
+    //뷰페이저를 쓸때 라이프사이클에 onCreate 가 호출안되니 리쥼이나 스타트에 로드를 하기
         context?.let { bookmarkViewModel.load(it) } //저장한거 불러오기
+        Log.d("lifecycle", "북마크프래그 :onCreate")
         super.onCreate(savedInstanceState)
 
     }
@@ -33,6 +35,8 @@ class BookmarkFragment : Fragment() {
             return binding.root
         }
     }
+
+
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)

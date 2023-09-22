@@ -21,8 +21,8 @@ class SearchFragment : Fragment() {
     private val bookmarkViewModel: BookmarkViewModel by activityViewModels() //이거
     private val searchViewModel : SearchViewModel by viewModels()
     private val job : Job? = null
-    private val adapter: SearchAdapter get() = binding.searchRV.adapter as SearchAdapter
-
+//    private val adapter: SearchAdapter get() = binding.searchRV.adapter as SearchAdapter //항상 현재 어댑터를 반환하지만 불필요한 검색 및 형변환을 반복 수행가능함..항상초기어댑터
+    private val adapter :SearchAdapter by lazy{binding.searchRV.adapter as SearchAdapter}
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         Log.d("lifecycle","searchFrag : onCreate")

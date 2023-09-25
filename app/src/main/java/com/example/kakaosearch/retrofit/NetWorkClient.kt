@@ -5,13 +5,12 @@ import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 
 object RetrofitInstance {
-    private fun getRetrofit() : Retrofit {
-        return Retrofit.Builder()
-            .baseUrl(Constants.BASE_URL)
-            .addConverterFactory(GsonConverterFactory.create())
-            .build()
-    }
-    fun getApiService():NetWorkInterface{
-        return getRetrofit().create(NetWorkInterface::class.java)
+    private val retrofit = Retrofit.Builder()
+        .baseUrl(Constants.BASE_URL)
+        .addConverterFactory(GsonConverterFactory.create())
+        .build()
+
+    val apiService: NetworkInterface by lazy {
+        retrofit.create(NetworkInterface::class.java)
     }
 }

@@ -12,7 +12,7 @@ import com.example.kakaosearch.data.KakaoItem
 import com.example.kakaosearch.databinding.BookmarkItemBinding
 import com.example.kakaosearch.extension.loadHeartImage
 
-import com.example.kakaosearch.viewModel.BookmarkViewModel
+import com.example.kakaosearch.viewModel.bookmark.BookmarkViewModel
 import java.util.Locale
 
 class BookmarkAdapter(private val bookmarkViewModel : BookmarkViewModel):RecyclerView.Adapter<BookmarkAdapter.ViewHolder>() {

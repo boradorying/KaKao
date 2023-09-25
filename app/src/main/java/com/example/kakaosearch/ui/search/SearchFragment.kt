@@ -1,32 +1,28 @@
-package com.example.kakaosearch.ui
+package com.example.kakaosearch.ui.search
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
+import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.GridLayoutManager
 import com.example.kakaosearch.adapter.SearchAdapter
+import com.example.kakaosearch.data.KakaoVideo
+import com.example.kakaosearch.data.KakaoVideoResponse
 import com.example.kakaosearch.databinding.FragmentSearchBinding
-import com.example.kakaosearch.viewModel.BookmarkViewModel
-import com.example.kakaosearch.viewModel.SearchViewModel
-import kotlinx.coroutines.Job
-
+import com.example.kakaosearch.viewModel.bookmark.BookmarkViewModel
+import com.example.kakaosearch.viewModel.search.SearchViewModel
+import com.example.kakaosearch.retrofit.RepositoryImpl
+import com.example.kakaosearch.retrofit.RetrofitInstance
+import com.example.kakaosearch.viewModel.search.SearchViewModelFactory
 
 class SearchFragment : Fragment() {
     private lateinit var binding: FragmentSearchBinding
-    private val bookmarkViewModel: BookmarkViewModel by activityViewModels() //이거
-    private val searchViewModel : SearchViewModel by viewModels()
-    private val job : Job? = null
-//    private val adapter: SearchAdapter get() = binding.searchRV.adapter as SearchAdapter //항상 현재 어댑터를 반환하지만 불필요한 검색 및 형변환을 반복 수행가능함..항상초기어댑터
-    private val adapter :SearchAdapter by lazy{binding.searchRV.adapter as SearchAdapter}
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        Log.d("lifecycle","searchFrag : onCreate")
-    }
+    private val bookmarkViewModel: BookmarkViewModel by activityViewModels()
+    private lateinit var searchViewModel: SearchViewModel
+    private val adapter: SearchAdapter by lazy { binding.searchRV.adapter as SearchAdapter }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         binding = FragmentSearchBinding.inflate(inflater, container, false)
@@ -35,21 +31,23 @@ class SearchFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+        setupViewModel()
         setupRecyclerView()
         searchButton()
         bookmarkViewModel.bookmarkedItems.observe(viewLifecycleOwner) {
-            // bookmarkedItems를 사용하여 북마크 상태를 업데이트
             adapter.notifyDataSetChanged()
         }
-        searchViewModel.searchResults.observe(viewLifecycleOwner){
-           adapter.submitList(it)
-
+        searchViewModel.searchResults.observe(viewLifecycleOwner) { results ->
+            adapter.submitList(results)
         }
     }
 
-    override fun onDestroyView() {
-        super.onDestroyView()
-        job?.cancel()
+
+    private fun setupViewModel() {
+        val repository = RepositoryImpl(RetrofitInstance.apiService)
+        val viewModelFactory = SearchViewModelFactory(repository)
+
+        searchViewModel = ViewModelProvider(this, viewModelFactory).get(SearchViewModel::class.java)
     }
 
     private fun searchButton() {
@@ -63,7 +61,7 @@ class SearchFragment : Fragment() {
 
     private fun setupRecyclerView() {
         binding.apply {
-            searchRV.adapter = SearchAdapter( bookmarkViewModel)
+            searchRV.adapter = SearchAdapter(bookmarkViewModel)
             searchRV.layoutManager = GridLayoutManager(context, 2)
         }
     }

@@ -1,4 +1,4 @@
-package com.example.kakaosearch.viewModel
+package com.example.kakaosearch.viewModel.bookmark
 
 import android.content.Context
 import androidx.lifecycle.LiveData
@@ -8,7 +8,7 @@ import com.example.kakaosearch.data.KakaoItem
 import com.google.gson.Gson
 import com.google.gson.reflect.TypeToken
 
-class BookmarkViewModel : ViewModel() {
+class BookmarkViewModel() : ViewModel() {
     private val _bookmarkedItems: MutableLiveData<MutableList<KakaoItem>> =
         MutableLiveData(mutableListOf())
     val bookmarkedItems: LiveData<MutableList<KakaoItem>> get() = _bookmarkedItems  //읽기전용

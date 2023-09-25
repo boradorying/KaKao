@@ -3,8 +3,8 @@ package com.example.kakaosearch.adapter
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentActivity
 import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.example.kakaosearch.ui.BookmarkFragment
-import com.example.kakaosearch.ui.SearchFragment
+import com.example.kakaosearch.ui.bookmark.BookmarkFragment
+import com.example.kakaosearch.ui.search.SearchFragment
 
 class PageAdapter(private val fragmentActivity:FragmentActivity, private val fragments : List<Fragment>): FragmentStateAdapter(fragmentActivity) {
 

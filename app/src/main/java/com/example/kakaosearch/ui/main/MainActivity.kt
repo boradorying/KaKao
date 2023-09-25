@@ -1,9 +1,11 @@
-package com.example.kakaosearch.ui
+package com.example.kakaosearch.ui.main
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import com.example.kakaosearch.adapter.PageAdapter
 import com.example.kakaosearch.databinding.ActivityMainBinding
+import com.example.kakaosearch.ui.search.SearchFragment
+import com.example.kakaosearch.ui.bookmark.BookmarkFragment
 
 class MainActivity : AppCompatActivity() {
 

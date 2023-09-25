@@ -9,6 +9,7 @@ data class KakaoVideoResponse (
     val documents : MutableList<KakaoVideo>?
 )
 
+
 data class VideoMeata (
     @SerializedName("total_count")
     val totalCount : Int?,

@@ -13,7 +13,7 @@ import com.example.kakaosearch.data.ItemType
 import com.example.kakaosearch.data.KakaoItem
 import com.example.kakaosearch.databinding.SearchItemBinding
 import com.example.kakaosearch.extension.loadHeartImage
-import com.example.kakaosearch.viewModel.BookmarkViewModel
+import com.example.kakaosearch.viewModel.bookmark.BookmarkViewModel
 import java.util.Locale
 
 class SearchAdapter( private val bookmarkViewModel : BookmarkViewModel) : ListAdapter<KakaoItem, SearchAdapter.ViewHolder>(KakaoItemDiffCallback()) {
